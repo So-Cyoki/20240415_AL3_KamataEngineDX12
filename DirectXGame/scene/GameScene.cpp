@@ -60,16 +60,22 @@ void GameScene::Update() {
 
 	// Sound
 	if (input_->TriggerKey(DIK_SPACE)) {
-		audio_->StopWave(_voiceHandle);
+		if (audio_->IsPlaying(_voiceHandle)) {
+			audio_->StopWave(_voiceHandle);
+		} else {
+			_voiceHandle = audio_->PlayWave(_soundDataHandle);
+		}
 	}
 
-	// DebugText
+// DebugText
+#ifdef _DEBUG
 	ImGui::Begin("Model Scale");
 	ImGui::Text("XYZ = (%d/%d/%d)", int(_scaleFloat[0]), int(_scaleFloat[1]), int(_scaleFloat[2]));
 	ImGui::InputFloat3("InputFloat", _scaleFloat);
 	ImGui::SliderFloat3("SliderFloat", _scaleFloat, 0, 20);
 	// ImGui::ShowDemoWindow();
 	ImGui::End();
+#endif
 
 	// Model
 	Matrix4x4 scaleMatrix = {_scaleFloat[0], 0, 0, 0, 0, _scaleFloat[1], 0, 0, 0, 0, _scaleFloat[2], 0, 0, 0, 0, 1};
