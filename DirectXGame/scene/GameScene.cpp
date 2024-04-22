@@ -4,16 +4,71 @@
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() {}
+GameScene::~GameScene() {
+	delete _model;
+	delete _debugCamera;
+	// ブロックの容器の内容を一切クリアする
+	for (std::vector<WorldTransform*>& line : _worldTransformBlocks) {
+		for (WorldTransform* row : line) {
+			delete row;
+		}
+	}
+	_worldTransformBlocks.clear();
+}
 
 void GameScene::Initialize() {
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
+
+	_model = Model::Create();
+	_viewProjection.Initialize();
+	_debugCamera = new DebugCamera(WinApp::kWindowWidth, WinApp::kWindowHeight);
+	// ブロックを初期化
+	const uint32_t kNumBlockHorizontal = 20;
+	const uint32_t kNumBlockVertical = 10;
+	const float kBlockWidth = 2.f;
+	const float kBlockHeight = 2.f;
+	_worldTransformBlocks.resize(kNumBlockVertical); // 事前に要素数で容器のサイズを決める
+	for (uint32_t i = 0; i < kNumBlockVertical; i++) {
+		_worldTransformBlocks[i].resize(kNumBlockHorizontal);
+	}
+	for (uint32_t i = 0; i < kNumBlockVertical; i++) {
+		for (uint32_t j = 0; j < kNumBlockHorizontal; j++) {
+			if (_mapChip[i][j])
+				continue;
+			_worldTransformBlocks[i][j] = new WorldTransform();
+			_worldTransformBlocks[i][j]->Initialize();
+			_worldTransformBlocks[i][j]->translation_.x = kBlockWidth * j;
+			_worldTransformBlocks[i][j]->translation_.y = kBlockHeight * i;
+		}
+	}
 }
 
-void GameScene::Update() {}
+void GameScene::Update() {
+#ifdef _DEBUG
+	if (input_->TriggerKey(DIK_SPACE)) {
+		_isDebugCameraActrive = !_isDebugCameraActrive;
+	}
+#endif // _DEBUG
+
+	if (_isDebugCameraActrive) {
+		_debugCamera->Update();
+		_viewProjection.matView = _debugCamera->GetViewProjection().matView;
+		_viewProjection.matProjection = _debugCamera->GetViewProjection().matProjection;
+		_viewProjection.TransferMatrix();
+	} else {
+		_viewProjection.UpdateMatrix();
+	}
+	for (std::vector<WorldTransform*>& line : _worldTransformBlocks) {
+		for (WorldTransform* row : line) {
+			if (!row)
+				continue;
+			row->UpdateMatrix();
+		}
+	}
+}
 
 void GameScene::Draw() {
 
@@ -41,6 +96,14 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
+
+	for (std::vector<WorldTransform*>& line : _worldTransformBlocks) {
+		for (WorldTransform* row : line) {
+			if (!row)
+				continue;
+			_model->Draw(*row, _viewProjection);
+		}
+	}
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
