@@ -32,8 +32,8 @@ Matrix4x4 MakeAffineMatrix(Vector3 scale, Vector3 rotation, Vector3 translation)
 	mRotationX.m[0][0] = mRotationX.m[3][3] = 1;
 	Matrix4x4 mRotationY = {0};
 	mRotationY.m[0][0] = cosf(rotation.y);
-	mRotationY.m[0][2] = sinf(rotation.y);
-	mRotationY.m[2][0] = -sinf(rotation.y);
+	mRotationY.m[2][0] = sinf(rotation.y);
+	mRotationY.m[0][2] = -sinf(rotation.y);
 	mRotationY.m[2][2] = cosf(rotation.y);
 	mRotationY.m[1][1] = mRotationY.m[3][3] = 1;
 	Matrix4x4 mRotation = Multiply(mRotationX, Multiply(mRotationY, mRotationZ));
