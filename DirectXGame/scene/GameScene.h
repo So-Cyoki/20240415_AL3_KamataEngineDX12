@@ -5,6 +5,7 @@
 #include "DirectXCommon.h"
 #include "Input.h"
 #include "Model.h"
+#include "Skydome.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
@@ -52,6 +53,8 @@ private: // メンバ変数
 	std::vector<std::vector<WorldTransform*>> _worldTransformBlocks;
 	bool _isDebugCameraActrive = false;
 	DebugCamera* _debugCamera = nullptr;
+	Skydome* _skydomeObj = nullptr;
+	Model* _modelSkydome = nullptr;
 
 	int _mapChip[10][20] = {
 	    {0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1},

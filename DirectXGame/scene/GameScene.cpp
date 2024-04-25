@@ -7,6 +7,8 @@ GameScene::GameScene() {}
 GameScene::~GameScene() {
 	delete _model;
 	delete _debugCamera;
+	delete _skydomeObj;
+	delete _modelSkydome;
 	// ブロックの容器の内容を一切クリアする
 	for (std::vector<WorldTransform*>& line : _worldTransformBlocks) {
 		for (WorldTransform* row : line) {
@@ -25,6 +27,10 @@ void GameScene::Initialize() {
 	_model = Model::Create();
 	_viewProjection.Initialize();
 	_debugCamera = new DebugCamera(WinApp::kWindowWidth, WinApp::kWindowHeight);
+	_skydomeObj = new Skydome();
+	_skydomeObj->Initialize(&_viewProjection);
+	_modelSkydome = Model::CreateFromOBJ("skydome", true);
+
 	// ブロックを初期化
 	const uint32_t kNumBlockHorizontal = 20;
 	const uint32_t kNumBlockVertical = 10;
@@ -52,6 +58,8 @@ void GameScene::Update() {
 		_isDebugCameraActrive = !_isDebugCameraActrive;
 	}
 #endif // _DEBUG
+
+	_skydomeObj->Update();
 
 	if (_isDebugCameraActrive) {
 		_debugCamera->Update();
@@ -104,6 +112,7 @@ void GameScene::Draw() {
 			_model->Draw(*row, _viewProjection);
 		}
 	}
+	_skydomeObj->Draw();
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
