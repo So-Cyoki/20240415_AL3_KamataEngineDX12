@@ -54,7 +54,9 @@ private: // メンバ変数
 	bool _isDebugCameraActrive = false;
 	DebugCamera* _debugCamera = nullptr;
 	Skydome* _skydomeObj = nullptr;
-	Model* _modelSkydome = nullptr;
+	// Player
+	WorldTransform _worldTransform_player;
+	Model* _model_player = nullptr;
 
 	int _mapChip[10][20] = {
 	    {0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1},
@@ -65,7 +67,7 @@ private: // メンバ変数
         {1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0},
 	    {0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1},
         {1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0},
-        {0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1},
+        {2, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1},
 	    {1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0}
     };
 

@@ -8,7 +8,7 @@ GameScene::~GameScene() {
 	delete _model;
 	delete _debugCamera;
 	delete _skydomeObj;
-	delete _modelSkydome;
+	delete _model_player;
 	// ブロックの容器の内容を一切クリアする
 	for (std::vector<WorldTransform*>& line : _worldTransformBlocks) {
 		for (WorldTransform* row : line) {
@@ -29,7 +29,8 @@ void GameScene::Initialize() {
 	_debugCamera = new DebugCamera(WinApp::kWindowWidth, WinApp::kWindowHeight);
 	_skydomeObj = new Skydome();
 	_skydomeObj->Initialize(&_viewProjection);
-	_modelSkydome = Model::CreateFromOBJ("skydome", true);
+	_worldTransform_player.Initialize();
+	_model_player = Model::CreateFromOBJ("Player", true);
 
 	// ブロックを初期化
 	const uint32_t kNumBlockHorizontal = 20;
@@ -42,12 +43,18 @@ void GameScene::Initialize() {
 	}
 	for (uint32_t i = 0; i < kNumBlockVertical; i++) {
 		for (uint32_t j = 0; j < kNumBlockHorizontal; j++) {
-			if (_mapChip[i][j])
-				continue;
-			_worldTransformBlocks[i][j] = new WorldTransform();
-			_worldTransformBlocks[i][j]->Initialize();
-			_worldTransformBlocks[i][j]->translation_.x = kBlockWidth * j;
-			_worldTransformBlocks[i][j]->translation_.y = kBlockHeight * i;
+			switch (_mapChip[i][j]) {
+			case 1:
+				_worldTransformBlocks[i][j] = new WorldTransform();
+				_worldTransformBlocks[i][j]->Initialize();
+				_worldTransformBlocks[i][j]->translation_.x = kBlockWidth * j;
+				_worldTransformBlocks[i][j]->translation_.y = kBlockHeight * (kNumBlockVertical - i);
+				break;
+			case 2:
+				_worldTransform_player.translation_.x = kBlockWidth * j;
+				_worldTransform_player.translation_.y = kBlockHeight * (kNumBlockVertical - i);
+				break;
+			}
 		}
 	}
 }
@@ -58,9 +65,6 @@ void GameScene::Update() {
 		_isDebugCameraActrive = !_isDebugCameraActrive;
 	}
 #endif // _DEBUG
-
-	_skydomeObj->Update();
-
 	if (_isDebugCameraActrive) {
 		_debugCamera->Update();
 		_viewProjection.matView = _debugCamera->GetViewProjection().matView;
@@ -69,6 +73,8 @@ void GameScene::Update() {
 	} else {
 		_viewProjection.UpdateMatrix();
 	}
+
+	// Block
 	for (std::vector<WorldTransform*>& line : _worldTransformBlocks) {
 		for (WorldTransform* row : line) {
 			if (!row)
@@ -76,6 +82,9 @@ void GameScene::Update() {
 			row->UpdateMatrix();
 		}
 	}
+	// Obj
+	_skydomeObj->Update();
+	_worldTransform_player.UpdateMatrix();
 }
 
 void GameScene::Draw() {
@@ -113,6 +122,7 @@ void GameScene::Draw() {
 		}
 	}
 	_skydomeObj->Draw();
+	_model_player->Draw(_worldTransform_player, _viewProjection);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
