@@ -16,6 +16,7 @@ GameScene::~GameScene() {
 		}
 	}
 	_worldTransformBlocks.clear();
+	delete _mapChipField;
 }
 
 void GameScene::Initialize() {
@@ -24,39 +25,20 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-	_model = Model::Create();
-	_viewProjection.Initialize();
-	_debugCamera = new DebugCamera(WinApp::kWindowWidth, WinApp::kWindowHeight);
-	_skydomeObj = new Skydome();
-	_skydomeObj->Initialize(&_viewProjection);
-	_worldTransform_player.Initialize();
-	_model_player = Model::CreateFromOBJ("Player", true);
+	// MapChip
+	_mapChipField = new MapChipField();
+	_mapChipField->LoadMapChipCsv("Resources/MapChip/map_01.csv");
+	GenerateBlocks();
 
-	// ブロックを初期化
-	const uint32_t kNumBlockHorizontal = 20;
-	const uint32_t kNumBlockVertical = 10;
-	const float kBlockWidth = 2.f;
-	const float kBlockHeight = 2.f;
-	_worldTransformBlocks.resize(kNumBlockVertical); // 事前に要素数で容器のサイズを決める
-	for (uint32_t i = 0; i < kNumBlockVertical; i++) {
-		_worldTransformBlocks[i].resize(kNumBlockHorizontal);
-	}
-	for (uint32_t i = 0; i < kNumBlockVertical; i++) {
-		for (uint32_t j = 0; j < kNumBlockHorizontal; j++) {
-			switch (_mapChip[i][j]) {
-			case 1:
-				_worldTransformBlocks[i][j] = new WorldTransform();
-				_worldTransformBlocks[i][j]->Initialize();
-				_worldTransformBlocks[i][j]->translation_.x = kBlockWidth * j;
-				_worldTransformBlocks[i][j]->translation_.y = kBlockHeight * (kNumBlockVertical - i);
-				break;
-			case 2:
-				_worldTransform_player.translation_.x = kBlockWidth * j;
-				_worldTransform_player.translation_.y = kBlockHeight * (kNumBlockVertical - i);
-				break;
-			}
-		}
-	}
+	// Obj
+	_debugCamera = new DebugCamera(WinApp::kWindowWidth, WinApp::kWindowHeight); // DebugCamera
+	_model = Model::Create();                                                    // TempModel
+	_viewProjection.Initialize();
+	_skydomeObj = new Skydome(); // SkyDome
+	_skydomeObj->Initialize(&_viewProjection);
+	_worldTransform_player.Initialize(); // Player
+	_worldTransform_player.translation_ = {2, 2, 0};
+	_model_player = Model::CreateFromOBJ("Player", true);
 }
 
 void GameScene::Update() {
@@ -140,4 +122,26 @@ void GameScene::Draw() {
 	Sprite::PostDraw();
 
 #pragma endregion
+}
+
+void GameScene::GenerateBlocks() {
+	// ブロックを初期化
+	const uint32_t kNumBlockHorizontal = MapChipField::kNumBlockHorizontal;
+	const uint32_t kNumBlockVertical = MapChipField::kNumBlockVirtical;
+	_worldTransformBlocks.resize(kNumBlockVertical); // 事前に要素数で容器のサイズを決める
+	for (uint32_t i = 0; i < kNumBlockVertical; i++) {
+		_worldTransformBlocks[i].resize(kNumBlockHorizontal);
+	}
+	// ブロック生成
+	for (uint32_t i = 0; i < kNumBlockVertical; i++) {
+		for (uint32_t j = 0; j < kNumBlockHorizontal; j++) {
+			switch (_mapChipField->GetMapChipTypeByIndex(j, i)) {
+			case MapChipType::kBlock:
+				_worldTransformBlocks[i][j] = new WorldTransform();
+				_worldTransformBlocks[i][j]->Initialize();
+				_worldTransformBlocks[i][j]->translation_ = _mapChipField->GetMapChipPositionByIndex(j, i);
+				break;
+			}
+		}
+	}
 }
