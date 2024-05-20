@@ -6,6 +6,7 @@
 #include "Input.h"
 #include "MapChipField.h"
 #include "Model.h"
+#include "Player.h"
 #include "Skydome.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
@@ -51,14 +52,13 @@ private: // メンバ変数
 	// 自分の変数
 	ViewProjection _viewProjection;
 	Model* _model = nullptr;
-	std::vector<std::vector<WorldTransform*>> _worldTransformBlocks;
+	// Obj
 	bool _isDebugCameraActrive = false;
-	DebugCamera* _debugCamera = nullptr;
-	Skydome* _skydomeObj = nullptr;
-	// Player
-	WorldTransform _worldTransform_player;
-	Model* _model_player = nullptr;
-	// MapChip
+	DebugCamera* _debugCamera = nullptr; // DebugCamera
+	Skydome* _skydomeObj = nullptr;      // Skydome
+	Player* _playerObj = nullptr;        // Player
+	// Map
+	std::vector<std::vector<WorldTransform*>> _worldTransformBlocks;
 	MapChipField* _mapChipField;
 	void GenerateBlocks(); // ブロック初期化と生成
 

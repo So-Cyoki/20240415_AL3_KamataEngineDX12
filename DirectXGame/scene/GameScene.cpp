@@ -8,7 +8,7 @@ GameScene::~GameScene() {
 	delete _model;
 	delete _debugCamera;
 	delete _skydomeObj;
-	delete _model_player;
+	delete _playerObj;
 	// ブロックの容器の内容を一切クリアする
 	for (std::vector<WorldTransform*>& line : _worldTransformBlocks) {
 		for (WorldTransform* row : line) {
@@ -31,14 +31,14 @@ void GameScene::Initialize() {
 	GenerateBlocks();
 
 	// Obj
-	_debugCamera = new DebugCamera(WinApp::kWindowWidth, WinApp::kWindowHeight); // DebugCamera
 	_model = Model::Create();                                                    // TempModel
-	_viewProjection.Initialize();
-	_skydomeObj = new Skydome(); // SkyDome
+	_viewProjection.Initialize();                                                // ViewProjection
+	_debugCamera = new DebugCamera(WinApp::kWindowWidth, WinApp::kWindowHeight); // DebugCamera
+	_skydomeObj = new Skydome();                                                 // SkyDome
 	_skydomeObj->Initialize(&_viewProjection);
-	_worldTransform_player.Initialize(); // Player
-	_worldTransform_player.translation_ = {2, 2, 0};
-	_model_player = Model::CreateFromOBJ("Player", true);
+	_playerObj = new Player();                                           // Player
+	Vector3 playerPos = _mapChipField->GetMapChipPositionByIndex(1, 18); // Playerの位置は左下のマスにする
+	_playerObj->Initalize(&_viewProjection, playerPos);
 }
 
 void GameScene::Update() {
@@ -66,7 +66,7 @@ void GameScene::Update() {
 	}
 	// Obj
 	_skydomeObj->Update();
-	_worldTransform_player.UpdateMatrix();
+	_playerObj->Update();
 }
 
 void GameScene::Draw() {
@@ -104,7 +104,7 @@ void GameScene::Draw() {
 		}
 	}
 	_skydomeObj->Draw();
-	_model_player->Draw(_worldTransform_player, _viewProjection);
+	_playerObj->Draw();
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
