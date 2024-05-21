@@ -38,4 +38,7 @@ public:
 	void Initalize(ViewProjection* viewProjection, const Vector3& position);
 	void Update();
 	void Draw();
+
+	const WorldTransform& GetWorldTransform() { return _worldTransform; };
+	const Vector3& GetVeloctiy() { return _velocity; };
 };

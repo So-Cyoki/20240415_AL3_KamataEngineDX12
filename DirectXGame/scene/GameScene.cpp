@@ -9,6 +9,7 @@ GameScene::~GameScene() {
 	delete _debugCamera;
 	delete _skydomeObj;
 	delete _playerObj;
+	delete _cameraConObj;
 	// ブロックの容器の内容を一切クリアする
 	for (std::vector<WorldTransform*>& line : _worldTransformBlocks) {
 		for (WorldTransform* row : line) {
@@ -37,8 +38,15 @@ void GameScene::Initialize() {
 	_skydomeObj = new Skydome();                                                 // SkyDome
 	_skydomeObj->Initialize(&_viewProjection);
 	_playerObj = new Player();                                           // Player
-	Vector3 playerPos = _mapChipField->GetMapChipPositionByIndex(1, 18); // Playerの位置は左下のマスにする
+	Vector3 playerPos = _mapChipField->GetMapChipPositionByIndex(1, 18); // Playerの最初位置を設定する
 	_playerObj->Initalize(&_viewProjection, playerPos);
+	_cameraConObj = new CameraController; // CameraControll
+	_cameraConObj->Initialize();
+	_cameraConObj->SetTarget(_playerObj); // 追従したいターゲット
+	_cameraConObj->Reset();               // 最初のカメラの位置を追従してるターゲットに設定していく
+	Vector3 mapMaxArea = _mapChipField->GetMapChipPositionByIndex(_mapChipField->kNumBlockHorizontal, 0);
+	CameraTools::Rect cameraArea = {35, mapMaxArea.x - 37, mapMaxArea.y - 19, 19};
+	_cameraConObj->SetMovableArea(cameraArea); // マップのサイズによってカメラの範囲を制限していく
 }
 
 void GameScene::Update() {
@@ -46,14 +54,20 @@ void GameScene::Update() {
 	if (input_->TriggerKey(DIK_SPACE)) {
 		_isDebugCameraActrive = !_isDebugCameraActrive;
 	}
-#endif // _DEBUG
+#endif
 	if (_isDebugCameraActrive) {
+		// _DebugCamera
 		_debugCamera->Update();
 		_viewProjection.matView = _debugCamera->GetViewProjection().matView;
 		_viewProjection.matProjection = _debugCamera->GetViewProjection().matProjection;
 		_viewProjection.TransferMatrix();
 	} else {
-		_viewProjection.UpdateMatrix();
+		// CameraController
+		_cameraConObj->Update();
+		_viewProjection.matView = _cameraConObj->GetViewProjection().matView;
+		_viewProjection.matProjection = _cameraConObj->GetViewProjection().matProjection;
+		_viewProjection.TransferMatrix();
+		//_viewProjection.UpdateMatrix();
 	}
 
 	// Block

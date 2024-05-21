@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Audio.h"
+#include "CameraController.h"
 #include "DebugCamera.h"
 #include "DirectXCommon.h"
 #include "Input.h"
@@ -54,12 +55,13 @@ private: // メンバ変数
 	Model* _model = nullptr;
 	// Obj
 	bool _isDebugCameraActrive = false;
-	DebugCamera* _debugCamera = nullptr; // DebugCamera
-	Skydome* _skydomeObj = nullptr;      // Skydome
-	Player* _playerObj = nullptr;        // Player
+	DebugCamera* _debugCamera = nullptr;       // DebugCamera
+	Skydome* _skydomeObj = nullptr;            // Skydome
+	Player* _playerObj = nullptr;              // Player
+	CameraController* _cameraConObj = nullptr; // CameraController
 	// Map
 	std::vector<std::vector<WorldTransform*>> _worldTransformBlocks;
-	MapChipField* _mapChipField;
+	MapChipField* _mapChipField = nullptr;
 	void GenerateBlocks(); // ブロック初期化と生成
 
 	/// <summary>
