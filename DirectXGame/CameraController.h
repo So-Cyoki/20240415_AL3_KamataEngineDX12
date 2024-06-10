@@ -18,7 +18,7 @@ using namespace CameraTools;
 class CameraController {
 	// 基礎属性
 	ViewProjection _viewProjection;        // 自身の位置(カメラだから、ViewProjectionにしないと)
-	Vector3 _targetPos;                    // 目標の位置
+	Vector3 _targetPos{};                  // 目標の位置
 	Vector3 _targetOffset = {0, 0, -50};   // カメラとターゲットの距離の差
 	Rect _movableArea;                     // カメラの移動範囲制限(L,R,T,B)
 	const float kInterpolationRate = 0.2f; // 座標補間

@@ -1,5 +1,7 @@
 #pragma once
+#include "DebugText.h"
 #include "Input.h"
+#include "MapChipField.h"
 #include "Model.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
@@ -12,12 +14,33 @@ private:
 	ViewProjection* _viewProjection = nullptr;
 	Model* _model = nullptr;
 
+	MapChipField* _mapChipField = nullptr; // どんなマップチップを使っている
+	const float _kWidth = 2;               // Playerのサイズ
+	const float _kHeight = 2;
+	static inline const float _kBlank = 0.1f; // 当たったら微小な余白
+	// マップと当たり情報
+	struct CollisionMapInfo {
+		bool ceiling = false; // isTop
+		bool landing = false; // isGround
+		bool isWall = false;  // isWall
+		Vector3 move{};
+	};
+	// 角
+	enum Corner {
+		kRightBottom, // 右下
+		kLeftBottom,  // 左下
+		kRightTop,    // 右上
+		kLeftTop,     // 左上
+		kNumCorner    // 要素数
+	};
+
 	Vector3 _velocity{};
 	const float _kAcceleration = 0.1f;
 	const float _kAttenuation = 0.5f;   // 速度減衰
 	const float _kLimitRunSpeed = 0.7f; // 最大速度
 
-	enum class LRDirection { // 向く
+	enum class LRDirection {
+		// 向く
 		kRight,
 		kLeft,
 	};
@@ -41,4 +64,13 @@ public:
 
 	const WorldTransform& GetWorldTransform() { return _worldTransform; };
 	const Vector3& GetVeloctiy() { return _velocity; };
+	void SetMapChipField(MapChipField* mapChipField) { _mapChipField = mapChipField; };
+
+private:
+	void Move();
+	void Rotating();
+
+	void MapCollision(CollisionMapInfo& info);
+	void MapCollision_Up(CollisionMapInfo& info);
+	Vector3 CornerPosition(const Vector3& center, Corner corner);
 };

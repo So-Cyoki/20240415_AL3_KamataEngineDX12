@@ -37,9 +37,12 @@ void GameScene::Initialize() {
 	_debugCamera = new DebugCamera(WinApp::kWindowWidth, WinApp::kWindowHeight); // DebugCamera
 	_skydomeObj = new Skydome();                                                 // SkyDome
 	_skydomeObj->Initialize(&_viewProjection);
+
 	_playerObj = new Player();                                           // Player
 	Vector3 playerPos = _mapChipField->GetMapChipPositionByIndex(1, 18); // Playerの最初位置を設定する
 	_playerObj->Initalize(&_viewProjection, playerPos);
+	_playerObj->SetMapChipField(_mapChipField);
+
 	_cameraConObj = new CameraController; // CameraControll
 	_cameraConObj->Initialize();
 	_cameraConObj->SetTarget(_playerObj); // 追従したいターゲット
