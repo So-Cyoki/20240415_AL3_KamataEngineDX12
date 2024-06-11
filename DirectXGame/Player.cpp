@@ -214,7 +214,7 @@ void Player::MapCollision_Left(CollisionMapInfo& info) {
 	MapChipType mapChipType{};
 	Vector3 offset(0, 1, 0);
 	// 左上の角
-	positionsNew[kLeftTop] += offset;
+	// positionsNew[kLeftTop] += offset;
 	indexSet = _mapChipField->GetMapChipIndexByPosition(positionsNew[kLeftTop]);
 	mapChipType = _mapChipField->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 	if (mapChipType == MapChipType::kBlock) {
@@ -258,7 +258,7 @@ void Player::MapCollision_Right(CollisionMapInfo& info) {
 	MapChipType mapChipType{};
 	Vector3 offset(0, 1, 0);
 	// 右上の角
-	positionsNew[kRightTop] += offset;
+	// positionsNew[kRightTop] += offset;
 	indexSet = _mapChipField->GetMapChipIndexByPosition(positionsNew[kRightTop]);
 	mapChipType = _mapChipField->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 	if (mapChipType == MapChipType::kBlock) {
