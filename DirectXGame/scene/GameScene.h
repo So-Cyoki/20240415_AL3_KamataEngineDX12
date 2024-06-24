@@ -4,6 +4,7 @@
 #include "CameraController.h"
 #include "DebugCamera.h"
 #include "DirectXCommon.h"
+#include "Enemy.h"
 #include "Input.h"
 #include "MapChipField.h"
 #include "Model.h"
@@ -58,6 +59,7 @@ private: // メンバ変数
 	DebugCamera* _debugCamera = nullptr;       // DebugCamera
 	Skydome* _skydomeObj = nullptr;            // Skydome
 	Player* _playerObj = nullptr;              // Player
+	Enemy* _enemyObj = nullptr;                // Enemy
 	CameraController* _cameraConObj = nullptr; // CameraController
 	// Map
 	std::vector<std::vector<WorldTransform*>> _worldTransformBlocks;

@@ -175,7 +175,7 @@ void Player::MapCollision_Down(CollisionMapInfo& info) {
 	mapChipType = _mapChipField->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 	if (mapChipType == MapChipType::kBlock) {
 		hit = true;
-		DebugText::GetInstance()->ConsolePrintf("down_kLeftBottom\n");
+		// DebugText::GetInstance()->ConsolePrintf("down_kLeftBottom\n");
 	}
 	// 右下の角
 	positionsNew[kRightBottom] += offset;
@@ -183,7 +183,7 @@ void Player::MapCollision_Down(CollisionMapInfo& info) {
 	mapChipType = _mapChipField->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 	if (mapChipType == MapChipType::kBlock) {
 		hit = true;
-		DebugText::GetInstance()->ConsolePrintf("down_kRightBottom\n");
+		// DebugText::GetInstance()->ConsolePrintf("down_kRightBottom\n");
 	}
 
 	if (hit) {
@@ -219,7 +219,7 @@ void Player::MapCollision_Left(CollisionMapInfo& info) {
 	mapChipType = _mapChipField->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 	if (mapChipType == MapChipType::kBlock) {
 		hit = true;
-		DebugText::GetInstance()->ConsolePrintf("left_kLeftTop\n");
+		// DebugText::GetInstance()->ConsolePrintf("left_kLeftTop\n");
 	}
 	// 左下の角
 	positionsNew[kLeftBottom] += offset;
@@ -227,7 +227,7 @@ void Player::MapCollision_Left(CollisionMapInfo& info) {
 	mapChipType = _mapChipField->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 	if (mapChipType == MapChipType::kBlock) {
 		hit = true;
-		DebugText::GetInstance()->ConsolePrintf("left_kLeftBottom\n");
+		// DebugText::GetInstance()->ConsolePrintf("left_kLeftBottom\n");
 	}
 
 	if (hit) {
@@ -263,7 +263,7 @@ void Player::MapCollision_Right(CollisionMapInfo& info) {
 	mapChipType = _mapChipField->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 	if (mapChipType == MapChipType::kBlock) {
 		hit = true;
-		DebugText::GetInstance()->ConsolePrintf("right_kRightTop\n");
+		// DebugText::GetInstance()->ConsolePrintf("right_kRightTop\n");
 	}
 	// 右下の角
 	positionsNew[kRightBottom] += offset;
@@ -271,7 +271,7 @@ void Player::MapCollision_Right(CollisionMapInfo& info) {
 	mapChipType = _mapChipField->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 	if (mapChipType == MapChipType::kBlock) {
 		hit = true;
-		DebugText::GetInstance()->ConsolePrintf("right_kRightBottom\n");
+		// DebugText::GetInstance()->ConsolePrintf("right_kRightBottom\n");
 	}
 
 	if (hit) {

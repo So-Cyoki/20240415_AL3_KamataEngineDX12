@@ -9,6 +9,7 @@ GameScene::~GameScene() {
 	delete _debugCamera;
 	delete _skydomeObj;
 	delete _playerObj;
+	delete _enemyObj;
 	delete _cameraConObj;
 	// ブロックの容器の内容を一切クリアする
 	for (std::vector<WorldTransform*>& line : _worldTransformBlocks) {
@@ -42,6 +43,10 @@ void GameScene::Initialize() {
 	Vector3 playerPos = _mapChipField->GetMapChipPositionByIndex(1, 18); // Playerの最初位置を設定する
 	_playerObj->Initalize(&_viewProjection, playerPos);
 	_playerObj->SetMapChipField(_mapChipField);
+
+	_enemyObj = new Enemy();                                             // Enemy
+	Vector3 enemyPos = _mapChipField->GetMapChipPositionByIndex(30, 18); // Enemyの最初位置を設定する
+	_enemyObj->Initalize(&_viewProjection, enemyPos);
 
 	_cameraConObj = new CameraController; // CameraControll
 	_cameraConObj->Initialize();
@@ -84,6 +89,7 @@ void GameScene::Update() {
 	// Obj
 	_skydomeObj->Update();
 	_playerObj->Update();
+	_enemyObj->Update();
 }
 
 void GameScene::Draw() {
@@ -121,6 +127,7 @@ void GameScene::Draw() {
 		}
 	}
 	_skydomeObj->Draw();
+	_enemyObj->Draw();
 	_playerObj->Draw();
 
 	// 3Dオブジェクト描画後処理
