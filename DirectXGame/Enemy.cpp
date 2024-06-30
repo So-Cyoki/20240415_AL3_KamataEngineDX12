@@ -3,7 +3,7 @@
 Enemy::~Enemy() { delete _model; }
 
 void Enemy::Initalize(ViewProjection* viewProjection, const Vector3& position) {
-	_model = Model::CreateFromOBJ("Player", true);
+	_model = Model::CreateFromOBJ("Enemy", true);
 	_viewProjection = viewProjection;
 	_worldTransform.Initialize();
 	_worldTransform.translation_ = position;
