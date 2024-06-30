@@ -34,6 +34,7 @@ void Player::Update() {
 	// 8.行列計算
 	_worldTransform.UpdateMatrix(); // 行列計算
 
+	// 敵と衝突
 	_aabb = My3dTools::GetAABB(_kWidth, _kHeight, _kWidth, GetWorldPosition());
 	if (_isEnemyHit)
 		_worldTransform.rotation_.y += 1;

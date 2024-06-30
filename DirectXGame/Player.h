@@ -19,9 +19,9 @@ private:
 	bool _isEnemyHit = false;
 
 	MapChipField* _mapChipField = nullptr; // どんなマップチップを使っている
-	const float _kWidth = 2;               // Playerのサイズ
-	const float _kHeight = 2;
-	const float _kBlank = 0.1f; // 当たったら微小な余白
+	const float _kWidth = 1.99f;           // Playerのサイズ
+	const float _kHeight = 1.99f;
+	const float _kBlank = 0.01f; // 当たったら微小な余白
 	// マップと当たり情報
 	struct CollisionMapInfo {
 		bool ceiling = false; // isTop
