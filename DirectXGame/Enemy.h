@@ -1,6 +1,7 @@
 #pragma once
 #include "DebugText.h"
 #include "Model.h"
+#include "My3dTools.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include <cmath>
@@ -9,6 +10,12 @@ private:
 	WorldTransform _worldTransform;
 	ViewProjection* _viewProjection = nullptr;
 	Model* _model = nullptr;
+
+	AABB _aabb{};
+	bool _isPlayerHit = false;
+
+	const float _kWidth = 2;
+	const float _kHeight = 2;
 
 	static inline const float kWalkSpeed = 0.1f; // speed
 	Vector3 _velocity{};
@@ -24,4 +31,7 @@ public:
 	void Initalize(ViewProjection* viewProjection, const Vector3& position);
 	void Update();
 	void Draw();
+
+	const Vector3 GetWorldPosition();
+	const AABB GetAABB() { return _aabb; };
 };

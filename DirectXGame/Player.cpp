@@ -33,9 +33,21 @@ void Player::Update() {
 	Rotating();
 	// 8.行列計算
 	_worldTransform.UpdateMatrix(); // 行列計算
+
+	_aabb = My3dTools::GetAABB(_kWidth, _kHeight, _kWidth, GetWorldPosition());
+	if (_isEnemyHit)
+		_worldTransform.rotation_.y += 1;
 }
 
 void Player::Draw() { _model->Draw(_worldTransform, *_viewProjection); }
+
+const Vector3 Player::GetWorldPosition() {
+	Vector3 worldPos{};
+	worldPos.x = _worldTransform.matWorld_.m[3][0];
+	worldPos.y = _worldTransform.matWorld_.m[3][1];
+	worldPos.z = _worldTransform.matWorld_.m[3][2];
+	return worldPos;
+}
 
 void Player::Move() {
 	// 重力
@@ -131,7 +143,7 @@ void Player::MapCollision_Up(CollisionMapInfo& info) {
 	mapChipType = _mapChipField->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 	if (mapChipType == MapChipType::kBlock) {
 		hit = true;
-		DebugText::GetInstance()->ConsolePrintf("up_kLeftTop\n");
+		// DebugText::GetInstance()->ConsolePrintf("up_kLeftTop\n");
 	}
 	// 右上の角
 	positionsNew[kRightTop] += offset;
@@ -139,7 +151,7 @@ void Player::MapCollision_Up(CollisionMapInfo& info) {
 	mapChipType = _mapChipField->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 	if (mapChipType == MapChipType::kBlock) {
 		hit = true;
-		DebugText::GetInstance()->ConsolePrintf("up_kRightTop\n");
+		// DebugText::GetInstance()->ConsolePrintf("up_kRightTop\n");
 	}
 
 	if (hit) {

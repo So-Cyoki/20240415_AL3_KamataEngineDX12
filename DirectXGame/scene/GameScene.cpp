@@ -9,7 +9,9 @@ GameScene::~GameScene() {
 	delete _debugCamera;
 	delete _skydomeObj;
 	delete _playerObj;
-	delete _enemyObj;
+	for (const Enemy* item : _enemies)
+		delete item;
+	_enemies.clear();
 	delete _cameraConObj;
 	// ブロックの容器の内容を一切クリアする
 	for (std::vector<WorldTransform*>& line : _worldTransformBlocks) {
@@ -44,9 +46,12 @@ void GameScene::Initialize() {
 	_playerObj->Initalize(&_viewProjection, playerPos);
 	_playerObj->SetMapChipField(_mapChipField);
 
-	_enemyObj = new Enemy();                                             // Enemy
-	Vector3 enemyPos = _mapChipField->GetMapChipPositionByIndex(30, 18); // Enemyの最初位置を設定する
-	_enemyObj->Initalize(&_viewProjection, enemyPos);
+	for (int i = 0; i < 3; i++) {
+		Enemy* item = new Enemy();                                                           // Enemy
+		Vector3 enemyPos = _mapChipField->GetMapChipPositionByIndex(30 + 2 * i, 18 - 2 * i); // Enemyの最初位置を設定する
+		item->Initalize(&_viewProjection, enemyPos);
+		_enemies.push_back(item);
+	}
 
 	_cameraConObj = new CameraController; // CameraControll
 	_cameraConObj->Initialize();
@@ -89,7 +94,18 @@ void GameScene::Update() {
 	// Obj
 	_skydomeObj->Update();
 	_playerObj->Update();
-	_enemyObj->Update();
+	for (Enemy* item : _enemies)
+		item->Update();
+
+	// Collision
+	bool isEnemyHit = false;
+	for (Enemy* item : _enemies) {
+		bool isCollision = My3dTools::IsCollision(_playerObj->GetAABB(), item->GetAABB());
+		isEnemyHit = isCollision;
+		if (isCollision)
+			break;
+	}
+	_playerObj->SetIsEnemyHit(isEnemyHit);
 }
 
 void GameScene::Draw() {
@@ -127,7 +143,8 @@ void GameScene::Draw() {
 		}
 	}
 	_skydomeObj->Draw();
-	_enemyObj->Draw();
+	for (Enemy* item : _enemies)
+		item->Draw();
 	_playerObj->Draw();
 
 	// 3Dオブジェクト描画後処理

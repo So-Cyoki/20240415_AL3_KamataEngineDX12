@@ -3,6 +3,7 @@
 #include "Input.h"
 #include "MapChipField.h"
 #include "Model.h"
+#include "My3dTools.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include <ImGuiManager.h>
@@ -13,6 +14,9 @@ private:
 	WorldTransform _worldTransform;
 	ViewProjection* _viewProjection = nullptr;
 	Model* _model = nullptr;
+
+	AABB _aabb{};
+	bool _isEnemyHit = false;
 
 	MapChipField* _mapChipField = nullptr; // どんなマップチップを使っている
 	const float _kWidth = 2;               // Playerのサイズ
@@ -67,6 +71,10 @@ public:
 	const WorldTransform& GetWorldTransform() { return _worldTransform; };
 	const Vector3& GetVeloctiy() { return _velocity; };
 	void SetMapChipField(MapChipField* mapChipField) { _mapChipField = mapChipField; };
+
+	const Vector3 GetWorldPosition();
+	const AABB GetAABB() { return _aabb; };
+	void SetIsEnemyHit(const bool flag) { _isEnemyHit = flag; };
 
 private:
 	void Move();

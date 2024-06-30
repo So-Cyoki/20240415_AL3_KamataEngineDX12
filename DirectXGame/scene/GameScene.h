@@ -8,11 +8,13 @@
 #include "Input.h"
 #include "MapChipField.h"
 #include "Model.h"
+#include "My3dTools.h"
 #include "Player.h"
 #include "Skydome.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+#include <list>
 #include <vector>
 
 /// <summary>
@@ -59,7 +61,7 @@ private: // メンバ変数
 	DebugCamera* _debugCamera = nullptr;       // DebugCamera
 	Skydome* _skydomeObj = nullptr;            // Skydome
 	Player* _playerObj = nullptr;              // Player
-	Enemy* _enemyObj = nullptr;                // Enemy
+	std::list<Enemy*> _enemies;                // Enemies
 	CameraController* _cameraConObj = nullptr; // CameraController
 	// Map
 	std::vector<std::vector<WorldTransform*>> _worldTransformBlocks;
