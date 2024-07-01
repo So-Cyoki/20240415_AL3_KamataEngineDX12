@@ -2,6 +2,7 @@
 
 #include "Audio.h"
 #include "CameraController.h"
+#include "DeathParticles.h"
 #include "DebugCamera.h"
 #include "DirectXCommon.h"
 #include "Enemy.h"
@@ -67,6 +68,8 @@ private: // メンバ変数
 	std::vector<std::vector<WorldTransform*>> _worldTransformBlocks;
 	MapChipField* _mapChipField = nullptr;
 	void GenerateBlocks(); // ブロック初期化と生成
+	// Particles
+	DeathParticles* _deathParticles = nullptr;
 
 	/// <summary>
 	/// ゲームシーン用

@@ -21,6 +21,7 @@ GameScene::~GameScene() {
 	}
 	_worldTransformBlocks.clear();
 	delete _mapChipField;
+	delete _deathParticles;
 }
 
 void GameScene::Initialize() {
@@ -60,6 +61,10 @@ void GameScene::Initialize() {
 	Vector3 mapMaxArea = _mapChipField->GetMapChipPositionByIndex(_mapChipField->kNumBlockHorizontal, 0);
 	CameraTools::Rect cameraArea = {35, mapMaxArea.x - 37, mapMaxArea.y - 19, 19};
 	_cameraConObj->SetMovableArea(cameraArea); // マップのサイズによってカメラの範囲を制限していく
+
+	// Particles
+	_deathParticles = new DeathParticles();
+	_deathParticles->Initalize(&_viewProjection, playerPos);
 }
 
 void GameScene::Update() {
@@ -106,6 +111,10 @@ void GameScene::Update() {
 			break;
 	}
 	_playerObj->SetIsEnemyHit(isEnemyHit);
+
+	// Particles
+	if (_deathParticles)
+		_deathParticles->Update();
 }
 
 void GameScene::Draw() {
@@ -135,17 +144,19 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 
-	for (std::vector<WorldTransform*>& line : _worldTransformBlocks) {
+	for (std::vector<WorldTransform*>& line : _worldTransformBlocks) { // Map
 		for (WorldTransform* row : line) {
 			if (!row)
 				continue;
 			_model->Draw(*row, _viewProjection);
 		}
 	}
-	_skydomeObj->Draw();
-	for (Enemy* item : _enemies)
+	_skydomeObj->Draw(); // skydome
+	if (_deathParticles) // deathParticles
+		_deathParticles->Draw();
+	for (Enemy* item : _enemies) // enemy
 		item->Draw();
-	_playerObj->Draw();
+	_playerObj->Draw(); // player
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
