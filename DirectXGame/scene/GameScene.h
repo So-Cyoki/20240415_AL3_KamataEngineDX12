@@ -49,6 +49,9 @@ public: // メンバ関数
 	/// </summary>
 	void Draw();
 
+	// isScene
+	bool isSceneOver = false;
+
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;

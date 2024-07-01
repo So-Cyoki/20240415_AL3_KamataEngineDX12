@@ -36,11 +36,13 @@ void Player::Update() {
 
 	// 敵と衝突
 	_aabb = My3dTools::GetAABB(_kWidth, _kHeight, _kWidth, GetWorldPosition());
-	if (_isEnemyHit)
-		_worldTransform.rotation_.y += 1;
 }
 
-void Player::Draw() { _model->Draw(_worldTransform, *_viewProjection); }
+void Player::Draw() {
+	if (_isEnemyHit)
+		return;
+	_model->Draw(_worldTransform, *_viewProjection);
+}
 
 const Vector3 Player::GetWorldPosition() {
 	Vector3 worldPos{};
@@ -51,6 +53,10 @@ const Vector3 Player::GetWorldPosition() {
 }
 
 void Player::Move() {
+	if (_isEnemyHit) {
+		_velocity = {0, 0, 0};
+		return;
+	}
 	// 重力
 	_velocity += Vector3(0, -_kGravityAcceleration, 0);
 	_velocity.y = max(_velocity.y, -_kLimitFallSpeed);

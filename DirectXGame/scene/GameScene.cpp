@@ -64,7 +64,7 @@ void GameScene::Initialize() {
 
 	// Particles
 	_deathParticles = new DeathParticles();
-	_deathParticles->Initalize(&_viewProjection, playerPos);
+	_deathParticles->Initalize(&_viewProjection);
 }
 
 void GameScene::Update() {
@@ -103,18 +103,23 @@ void GameScene::Update() {
 		item->Update();
 
 	// Collision
-	bool isEnemyHit = false;
 	for (Enemy* item : _enemies) {
 		bool isCollision = My3dTools::IsCollision(_playerObj->GetAABB(), item->GetAABB());
-		isEnemyHit = isCollision;
-		if (isCollision)
+		if (isCollision) {
+			_playerObj->SetIsEnemyHit(true);
+			_deathParticles->SetStartPos(_playerObj->GetWorldPosition());
+			_deathParticles->SetIsStart(true);
 			break;
+		}
 	}
-	_playerObj->SetIsEnemyHit(isEnemyHit);
 
 	// Particles
 	if (_deathParticles)
 		_deathParticles->Update();
+
+	// SceneChange
+	if (_deathParticles->GetParticlesOver())
+		isSceneOver = true;
 }
 
 void GameScene::Draw() {

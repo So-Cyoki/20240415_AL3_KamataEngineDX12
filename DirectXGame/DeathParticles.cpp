@@ -2,14 +2,14 @@
 
 DeathParticles::~DeathParticles() { delete _model; }
 
-void DeathParticles::Initalize(ViewProjection* viewProjection, const Vector3& position) {
+void DeathParticles::Initalize(ViewProjection* viewProjection) {
 	_model = Model::CreateFromOBJ("Ball", true);
 	_viewProjection = viewProjection;
 	int tempIndex = 0;
 	for (auto& worldTransform : _worldTransforms) {
 		worldTransform.Initialize();
 		worldTransform.scale_ = {0.5f, 0.5f, 0.5f};
-		worldTransform.translation_ = position;
+		// worldTransform.translation_ = position;
 		tempIndex++;
 	}
 
@@ -18,7 +18,7 @@ void DeathParticles::Initalize(ViewProjection* viewProjection, const Vector3& po
 }
 
 void DeathParticles::Update() {
-	if (_isTimeFinished)
+	if (_isTimeFinished || !_isStart)
 		return;
 	// Move
 	int tempIndex = 0;
@@ -31,11 +31,10 @@ void DeathParticles::Update() {
 	}
 
 	// Time
-	_currentTime += 1 / 60.f;
-	if (_currentTime >= _kDuration) {
-		_currentTime = _kDuration;
+	if (_currentTime < _kDuration)
+		_currentTime += 1 / 60.f;
+	else
 		_isTimeFinished = true;
-	}
 
 	// Color
 	_color.w = 1 - std::clamp(_currentTime / _kDuration, 0.f, 1.f);
@@ -44,9 +43,21 @@ void DeathParticles::Update() {
 }
 
 void DeathParticles::Draw() {
-	if (_isTimeFinished)
+	if (_isTimeFinished || !_isStart)
 		return;
 	for (auto& worldTransform : _worldTransforms) {
 		_model->Draw(worldTransform, *_viewProjection, &_objectColor);
 	}
+}
+
+void DeathParticles::SetStartPos(Vector3 pos) {
+	for (auto& worldTransform : _worldTransforms) {
+		worldTransform.translation_ = pos;
+	}
+}
+
+const bool DeathParticles::GetParticlesOver() {
+	if (_isTimeFinished)
+		return true;
+	return false;
 }
